@@ -31,4 +31,5 @@
 
  https://www.youtube.com/results?search_query=flask+tensorflow+classification
  
- pip install paramiko
+ pip install paramiko"#- Example: ```!python train.py train.csv.zip training_config.json```" 
+"#- !wget git@github.com:niranjan8129/classification_tensorflow.git   for download " 

@@ -53,13 +53,18 @@ class TextCNNRNN(object):
 
 
 		lstm_cell =tf.keras.layers.LSTMCell(units=hidden_unit)
-		lstm_cell = tf.nn.RNNCellDropoutWrapper(lstm_cell, output_keep_prob=self.dropout_keep_prob)
+		lstm_cell = lstm_cell.get_dropout_mask_for_cell(training=True,count=10 )
+		#lstm_cell = tf.nn.RNNCellDropoutWrapper(lstm_cell, output_keep_prob=self.dropout_keep_prob)
 
 		self._initial_state = lstm_cell.get_initial_state(self.batch_size, tf.float32)
 		
-		self._initial_state = get_initial_state(lstm_cell,self.batch_size, tf.float32)
+		#self._initial_state = get_initial_state(lstm_cell,self.batch_size, tf.float32)
+		#inputs = [tf.squeeze(input_, [1]) for input_ in tf.split(1, reduced, pooled_concat)]
 		inputs = [tf.squeeze(input_, [1]) for input_ in tf.split(pooled_concat,num_or_size_splits=int(reduced),axis=1)]
+		#outputs, state = tf.compat.v1.nn.rnn_cell(lstm_cell, inputs, initial_state=self._initial_state, sequence_length=self.real_len)
+		#outputs, state = tf.compat.v1.nn.static_rnn(lstm_cell, inputs, initial_state=self._initial_state)
 		return_state =tf.keras.layers.RNN(lstm_cell, inputs, initial_state=self._initial_state,return_sequences=True, return_state=True)
+		#outputs, state = tf.compat.v1.nn.static_rnn(lstm_cell, inputs, initial_state=self._initial_state,return_sequences=True, return_state=True)
 
 		#print(return_state)
 		# Collect the appropriate last words into variable output (dimension = batch x embedding_size)

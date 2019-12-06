@@ -69,7 +69,7 @@ class TextCNNRNN(object):
 			one = tf.ones([1, hidden_unit], tf.float32)
 			for i in range(1,len(outputs)):
 				ind = self.real_len < (i+1)
-				ind = tf.cast(ind, dtype=tf.float32)
+				ind = tf.cast(ind, dtype=tf.float32) 
 				ind = tf.expand_dims(ind, -1)
 				mat = tf.matmul(ind, one)
 				output = tf.add(tf.multiply(output, mat),tf.multiply(outputs[i], 1.0 - mat))

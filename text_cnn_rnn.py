@@ -57,7 +57,6 @@ class TextCNNRNN(object):
 
 		self._initial_state = lstm_cell.get_initial_state(self.batch_size, tf.float32)
 		
-		self._initial_state = get_initial_state(lstm_cell,self.batch_size, tf.float32)
 		inputs = [tf.squeeze(input_, [1]) for input_ in tf.split(pooled_concat,num_or_size_splits=int(reduced),axis=1)]
 		return_state =tf.keras.layers.RNN(lstm_cell, inputs, initial_state=self._initial_state,return_sequences=True, return_state=True)
 

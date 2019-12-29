@@ -59,7 +59,7 @@ class TextCNNRNN(object):
 
 
 		lstm_layers = [tf.keras.layers.LSTMCell(self.batch_size),tf.keras.layers.LSTMCell(self.batch_size)]
-		lstm_layers = tf.nn.RNNCellDropoutWrapper(lstm_layers, output_keep_prob=self.dropout_keep_prob)
+		#lstm_layers = tf.nn.RNNCellDropoutWrapper(lstm_layers, output_keep_prob=self.dropout_keep_prob)
 		stacked = tf.keras.layers.StackedRNNCells(lstm_layers)
 
 		#self._initial_state=zero_state.get_initial_state(lstm_cell, batch_size=self.batch_size, dtype=tf.float3)

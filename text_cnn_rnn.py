@@ -54,7 +54,7 @@ class TextCNNRNN(object):
 
 
 		lstm_cell =tf.keras.layers.GRUCell(units=hidden_unit)
-		lstm_cell = tf.nn.RNNCellDropoutWrapper(lstm_cell, output_keep_prob=self.dropout_keep_prob)
+		#lstm_cell = tf.nn.RNNCellDropoutWrapper(lstm_cell, output_keep_prob=self.dropout_keep_prob)
 
 
 		self._initial_state = lstm_cell.get_initial_state( inputs=lstm_cell, batch_size=self.batch_size, dtype= tf.float32)

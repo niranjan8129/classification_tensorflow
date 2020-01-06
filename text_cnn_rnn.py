@@ -2,7 +2,6 @@ import numpy as np
 import tensorflow as tf
 from tensorflow.python.ops import array_ops
 from tensorflow.python.keras import backend as K
-import zero_state
 
 class TextCNNRNN(object):
 	def __init__(self, embedding_mat, non_static, hidden_unit, sequence_length, max_pool_size,
@@ -54,24 +53,26 @@ class TextCNNRNN(object):
 		pooled_concat = tf.nn.dropout(pooled_concat, 1 - (self.dropout_keep_prob))
 
 
-		#lstm_cell =tf.keras.layers.LSTMCell(units=hidden_unit,dropout=0.5)
-		#lstm_cell = tf.nn.RNNCellDropoutWrapper(lstm_cell, output_keep_prob=self.dropout_keep_prob)
+		lstm_cell =tf.keras.layers.GRUCell(units=hidden_unit)
+		lstm_cell = tf.nn.RNNCellDropoutWrapper(lstm_cell, output_keep_prob=self.dropout_keep_prob)
 
 
-		lstm_layers = [tf.keras.layers.LSTMCell(self.batch_size),tf.keras.layers.LSTMCell(self.batch_size)]
+		#lstm_layers = [tf.keras.layers.LSTMCell(hidden_unit),tf.keras.layers.LSTMCell(hidden_unit)]
 		#lstm_layers = tf.nn.RNNCellDropoutWrapper(lstm_layers, output_keep_prob=self.dropout_keep_prob)
-		stacked = tf.keras.layers.StackedRNNCells(lstm_layers)
+		#stacked = tf.keras.layers.StackedRNNCells(lstm_cell)
 
-		#self._initial_state=zero_state.get_initial_state(lstm_cell, batch_size=self.batch_size, dtype=tf.float3)
-		#self._initial_state = lstm_cell.get_initial_state(128, batch_size=self.batch_size, dtype= tf.float32)
-		#self._initial_state = lstm_cell.get_initial_state(self, inputs=lstm_cell, batch_size=self.batch_size, dtype= tf.float32)
+
+		self._initial_state = lstm_cell.get_initial_state(self, inputs=lstm_cell, batch_size=self.batch_size, dtype= tf.float32)
 		#self._initial_state = lstm_cell.get_initial_state(self.batch_size, tf.float32)
 		
 		inputs = [tf.squeeze(input_, [1]) for input_ in tf.split(pooled_concat,num_or_size_splits=int(reduced),axis=1)]
-
+		
+		#self._initial_state=lstm_cell.get_initial_state(inputs, batch_size=self.batch_size, dtype=tf.float3)
 		#self._initial_state=zero_state.get_initial_state(lstm_cell, batch_size=self.batch_size, dtype=tf.float32)
 		#self._initial_state = lstm_cell.get_initial_state(inputs, batch_size=self.batch_size, dtype= tf.float32)
-		return_state =tf.keras.layers.RNN(stacked,  inputs,return_sequences=True, return_state=True, dtype=tf.float32)
+		#return_state =tf.keras.layers.RNN(stacked,  inputs,return_sequences=True, return_state=True, dtype=tf.float32)
+		
+		return_state =tf.keras.layers.RNN(cell=lstm_cell,  inputs=inputs,initial_state=self._initial_state, return_sequences=True, return_state=True, dtype=tf.float32)
 
 		#print(return_state)
 		# Collect the appropriate last words into variable output (dimension = batch x embedding_size)

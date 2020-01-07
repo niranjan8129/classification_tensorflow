@@ -54,18 +54,11 @@ class TextCNNRNN(object):
 
 
 		lstm_cell =tf.keras.layers.GRUCell(units=hidden_unit)
-		#lstm_cell = tf.nn.RNNCellDropoutWrapper(lstm_cell, output_keep_prob=self.dropout_keep_prob)
+		lstm_cell = tf.nn.RNNCellDropoutWrapper(lstm_cell, output_keep_prob=self.dropout_keep_prob)
 
 
 		self._initial_state = lstm_cell.get_initial_state( inputs=lstm_cell, batch_size=self.batch_size, dtype= tf.float32)
-		#self._initial_state = lstm_cell.get_initial_state(self.batch_size, tf.float32)
-		
 		inputs = [tf.squeeze(input_, [1]) for input_ in tf.split(pooled_concat,num_or_size_splits=int(reduced),axis=1)]
-		
-		#self._initial_state=lstm_cell.get_initial_state(inputs, batch_size=self.batch_size, dtype=tf.float3)
-		#self._initial_state = lstm_cell.get_initial_state(inputs, batch_size=self.batch_size, dtype= tf.float32)
-		#return_state =tf.keras.layers.RNN(stacked,  inputs,return_sequences=True, return_state=True, dtype=tf.float32)
-		
 		return_state =tf.keras.layers.RNN(cell=lstm_cell, inputs=inputs,initial_state=self._initial_state, return_sequences=True, return_state=True, dtype=tf.float32)
 
 		#print(return_state)

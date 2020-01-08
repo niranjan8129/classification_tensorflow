@@ -52,7 +52,7 @@ class TextCNNRNN(object):
 		pooled_concat = tf.concat(pooled_concat,2) 
 		pooled_concat = tf.nn.dropout(pooled_concat, 1 - (self.dropout_keep_prob))
 
-		'''
+
 		lstm_cell =tf.keras.layers.GRUCell(units=hidden_unit)
 		lstm_cell = tf.nn.RNNCellDropoutWrapper(lstm_cell, output_keep_prob=self.dropout_keep_prob)
 
@@ -60,21 +60,10 @@ class TextCNNRNN(object):
 		self._initial_state = lstm_cell.get_initial_state( inputs=lstm_cell, batch_size=self.batch_size, dtype= tf.float32)
 		inputs = [tf.squeeze(input_, [1]) for input_ in tf.split(pooled_concat,num_or_size_splits=int(reduced),axis=1)]
 		return_state =tf.keras.layers.RNN(cell=lstm_cell, inputs=inputs,initial_state=self._initial_state, return_sequences=True, return_state=True, dtype=tf.float32)
-		'''
-		lstm_cell =tf.keras.layers.GRUCell(units=hidden_unit)
-		lstm_cell = tf.nn.RNNCellDropoutWrapper(lstm_cell, output_keep_prob=self.dropout_keep_prob)
-
-		self._initial_state = lstm_cell.get_initial_state(batch_size=self.batch_size, dtype=tf.float32)
-
-		inputs = [tf.squeeze(input_, [1]) for input_ in tf.split(pooled_concat,num_or_size_splits=int(reduced),axis=1)]
-
-		rnn= tf.keras.layers.RNN(cell=lstm_cell,initial_state=self._initial_state, return_sequences=True, return_state=True, dtype=tf.float32)
-
-		outputs = rnn(inputs)
 
 		#print(return_state)
 		# Collect the appropriate last words into variable output (dimension = batch x embedding_size)
-		output = outputs[0]
+		output = return_state[0]
 		with tf.compat.v1.variable_scope('Output'):
 			tf.compat.v1.get_variable_scope().reuse_variables()
 			one = tf.ones([1, hidden_unit], tf.float32)

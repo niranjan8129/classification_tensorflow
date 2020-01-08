@@ -1,7 +1,5 @@
 import numpy as np
 import tensorflow as tf
-from tensorflow.python.ops import array_ops
-from tensorflow.python.keras import backend as K
 
 class TextCNNRNN(object):
 	def __init__(self, embedding_mat, non_static, hidden_unit, sequence_length, max_pool_size,
@@ -65,11 +63,12 @@ class TextCNNRNN(object):
 		lstm_cell = tf.nn.RNNCellDropoutWrapper(lstm_cell, output_keep_prob=self.dropout_keep_prob)
 
 		self._initial_state = lstm_cell.get_initial_state(batch_size=self.batch_size, dtype=tf.float32)
-
+ 
 		inputs = [tf.squeeze(input_, [1]) for input_ in tf.split(pooled_concat,num_or_size_splits=int(reduced),axis=1)]
 
-		rnn= tf.keras.layers.RNN(cell=lstm_cell,initial_state=self._initial_state, return_sequences=True, return_state=True, dtype=tf.float32)
-
+		rnn= tf.keras.layers.RNN(cell=lstm_cell,  return_sequences=True, return_state=True, dtype=tf.float32)
+		print(inputs)
+		print(rnn)
 		outputs = rnn(inputs)
 
 		#print(return_state)

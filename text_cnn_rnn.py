@@ -67,8 +67,8 @@ class TextCNNRNN(object):
 		inputs = [tf.squeeze(input_, [1]) for input_ in tf.split(pooled_concat,num_or_size_splits=int(reduced),axis=1)]
 
 		rnn= tf.keras.layers.RNN(cell=lstm_cell,  return_sequences=True, return_state=True, dtype=tf.float32)
-		print(inputs)
-		print(rnn)
+		print('inputse for "{}!"'.format(inputs)) 
+		print('rnn for "{}!"'.format(rnn))
 		outputs = rnn(inputs)
 
 		#print(return_state)

@@ -70,7 +70,7 @@ class TextCNNRNN(object):
 		print('inputse for "{}!"'.format(inputs)) 
 		print('rnn for "{}!"'.format(rnn))
 		outputs = rnn(inputs)
-
+		print('outputs for "{}!"'.format(outputs))
 		#print(return_state)
 		# Collect the appropriate last words into variable output (dimension = batch x embedding_size)
 		output = outputs[0]
